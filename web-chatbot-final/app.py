@@ -217,7 +217,7 @@ def main():
     
     st.title("💬 Web Chat Bot")
     
-    # Always show quick action buttons
+    # Always show quick action buttons at the top
     st.markdown("### Quick Start")
     cols = st.columns(2)
     for idx, action in enumerate(QUICK_ACTIONS):
@@ -230,6 +230,9 @@ def main():
     
     st.markdown("---")
     
+    # Chat input BEFORE messages (so it stays visible)
+    user_input = st.chat_input("Type your message...")
+    
     # Display chat history
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
@@ -239,8 +242,6 @@ def main():
     if st.session_state.pending_query:
         user_input = st.session_state.pending_query
         st.session_state.pending_query = None
-    else:
-        user_input = st.chat_input("Type your message...")
     
     if user_input:
         user_lang = detect_language(user_input)
@@ -257,6 +258,7 @@ def main():
                 st.markdown(response)
         
         st.session_state.messages.append({"role": "assistant", "content": response})
+        st.rerun()
 
 if __name__ == "__main__":
     main()
