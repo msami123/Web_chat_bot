@@ -202,47 +202,36 @@ def inject_custom_css():
     footer {visibility: hidden;}
     header {visibility: hidden;}
     
-    .main {
-        background: #ffffff;
+    /* Force white background everywhere */
+    .main, [data-testid="stAppViewContainer"], [data-testid="stApp"] {
+        background-color: #ffffff !important;
     }
     
+    /* Force black text */
+    .main, .main * {
+        color: #000000 !important;
+    }
+    
+    /* Chat messages */
     .stChatMessage {
-        background-color: #f8f9fa;
+        background-color: #f8f9fa !important;
         border: 1px solid #e0e0e0;
         border-radius: 12px;
         padding: 15px;
         margin: 10px 0;
     }
     
-    h1 {
+    /* Title */
+    h1, h2, h3 {
         text-align: center;
-        color: #000000;
+        color: #000000 !important;
         font-weight: 800;
     }
     
-    .welcome-section {
-        text-align: center;
-        padding: 40px 20px;
-        margin-bottom: 30px;
-        background: #ffffff;
-    }
-    
-    .welcome-title {
-        font-size: 2.5em;
-        font-weight: bold;
-        margin-bottom: 10px;
-        color: #000000;
-    }
-    
-    .welcome-subtitle {
-        font-size: 1.2em;
-        color: #666666;
-        margin-bottom: 30px;
-    }
-    
+    /* Buttons */
     .stButton > button {
-        background-color: #000000;
-        color: #ffffff;
+        background-color: #000000 !important;
+        color: #ffffff !important;
         border: 2px solid #000000;
         border-radius: 8px;
         padding: 12px 24px;
@@ -251,14 +240,22 @@ def inject_custom_css():
     }
     
     .stButton > button:hover {
-        background-color: #ffffff;
-        color: #000000;
+        background-color: #ffffff !important;
+        color: #000000 !important;
         border: 2px solid #000000;
     }
     
+    /* Chat input */
     .stChatInputContainer {
         border-top: 2px solid #e0e0e0;
         padding-top: 20px;
+        background-color: #ffffff !important;
+    }
+    
+    /* Input text box */
+    .stChatInput textarea {
+        background-color: #ffffff !important;
+        color: #000000 !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -273,16 +270,6 @@ def show_welcome_screen():
         <div class="welcome-subtitle">How can I help you? | كيف أساعدك؟</div>
     </div>
     """, unsafe_allow_html=True)
-    
-    st.markdown("### Quick Start")
-    cols = st.columns(2)
-    for idx, action in enumerate(QUICK_ACTIONS):
-        col = cols[idx % 2]
-        with col:
-            button_text = f"{action['icon']} {action['ar']}\n{action['en']}"
-            if st.button(button_text, key=f"quick_{idx}", use_container_width=True):
-                st.session_state["pending_query"] = action["ar"]
-                st.rerun()
 
 # -----------------------------
 # Main App
@@ -297,13 +284,25 @@ def main():
     
     st.title("💬 Web Chat Bot")
     
-    if len(st.session_state.messages) == 0:
-        show_welcome_screen()
-    else:
-        for message in st.session_state.messages:
-            with st.chat_message(message["role"]):
-                st.markdown(message["content"])
+    # Always show quick action buttons
+    st.markdown("### Quick Start")
+    cols = st.columns(2)
+    for idx, action in enumerate(QUICK_ACTIONS):
+        col = cols[idx % 2]
+        with col:
+            button_text = f"{action['icon']} {action['ar']}\n{action['en']}"
+            if st.button(button_text, key=f"quick_{idx}", use_container_width=True):
+                st.session_state["pending_query"] = action["ar"]
+                st.rerun()
     
+    st.markdown("---")
+    
+    # Display chat history
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+    
+    # Handle pending query from quick action button
     if st.session_state.pending_query:
         user_input = st.session_state.pending_query
         st.session_state.pending_query = None
