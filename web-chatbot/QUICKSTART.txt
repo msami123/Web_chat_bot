@@ -1,0 +1,47 @@
+# ⚡ Quick Setup - 3 Steps Only!
+
+## 1️⃣ Extract Files
+```bash
+unzip web-chatbot.zip
+cd web-chatbot
+```
+
+## 2️⃣ Install
+```bash
+pip install -r requirements.txt
+```
+
+## 3️⃣ Run
+```bash
+streamlit run app.py
+```
+
+**Done!** Opens at: http://localhost:8501
+
+---
+
+## ⚠️ Security
+
+The `.env` file has an API key. **Change it before production!**
+
+Get new key: https://platform.openai.com/api-keys
+
+Edit `.env`:
+```
+OPENAI_API_KEY=your-new-key-here
+```
+
+---
+
+## 📁 Files Included
+
+- `app.py` - Main app
+- `knowledge_webbot.json` - Data
+- `system_prompt_webbot.json` - Config
+- `requirements.txt` - Dependencies
+- `.env` - API key (ready to use)
+- `README.md` - Full docs
+
+---
+
+**Just 3 commands and you're ready!** 🚀
